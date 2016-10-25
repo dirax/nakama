@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <script src="components/loader.js"></script>
+    <link rel="stylesheet" href="components/loader.css">
+    <script src="js/feed-reader.js"></script>
+    <script src="js/favorite-online.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/favorite.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        
+    <script>
+    var feedUrl = typeof window.cordova == "undefined" ? "./rss.xml" : "http://blog.mb.cloud.nifty.com/?feed=rss2";
+    
+    $(function() {
+        var application_key = "1bea2d63ee8177302bf36bde39604ad34c575b01068af2af557247e15a0e3ed8";
+        var client_key      = "2d5c6076a47ccd3cb1c5fc52d6ccab263a2dd59a50740015d517f7e0f2f1e28e";
+        
+        // お気に入りクラスを定義します
+        // 内容は www/js/favorite-online.js になります
+        var favorite = new Favorite({
+            applicationKey: application_key,
+            clientKey: client_key
+        });
+    
+        var feed = new Feed({
+            url: feedUrl,      // カンマの追加を忘れずに
+            favorite: favorite // 追加
+        });
+            
+        if (monaca.isIOS) {
+            $('.toolbar').css('margin-top', '20px');
+            $('.button').css('top', '20px');
+        }
+        
+        $('.button').click(function() {
+          console.log('Reload.');
+          feed.load();
+        });
+        
+        feed.load();
+        
+    });
+    
+</script>
+</head>
+<body>
+<div class="toolbar">
+        <h2>仲間の絆</h2>
+        <div class="button">🔃</div>
+    </div>
+      
+    <div id="mask">
+      <div id="loading"><img src="loading.gif"></div>
+    </div>
+
+    <ul id="feed-list"></ul>
+    <p id="error-message"></p>
+</body>
+</html>
